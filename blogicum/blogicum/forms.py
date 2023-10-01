@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class RegistrationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
@@ -14,6 +15,7 @@ class RegistrationForm(UserCreationForm):
                   'last_name',
                   )
 
+
 class ProfileUpdate(forms.ModelForm):
     class Meta:
         model = User
@@ -23,4 +25,3 @@ class ProfileUpdate(forms.ModelForm):
                   'last_name',
                   )
         field_classes = {'username': UsernameField}
-    

@@ -66,6 +66,7 @@ class PostAdmin(admin.ModelAdmin):
         'created_at'
     )
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
@@ -77,4 +78,3 @@ class CommentAdmin(admin.ModelAdmin):
 
     search_fields = list_display
     list_filter = list_display
-
