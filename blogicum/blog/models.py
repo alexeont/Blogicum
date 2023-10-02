@@ -6,13 +6,19 @@ from .blog_constants import FIELD_LENGTH, TRUNCATED_MODEL_NAME
 User = get_user_model()
 
 
-class PublishedCreated(models.Model):
+class CreatedAtModel(models.Model):
+    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+class PublishedCreated(CreatedAtModel):
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
         help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
-    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
 
     class Meta:
         abstract = True
@@ -86,15 +92,14 @@ class Post(PublishedCreated):
         return self.title[:TRUNCATED_MODEL_NAME]
 
 
-class Comment(models.Model):
+class Comment(CreatedAtModel):
     text = models.TextField('Оставить комментарий')
-    post_id = models.ForeignKey(
+    post = models.ForeignKey(
         Post,
         verbose_name='Пост',
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:

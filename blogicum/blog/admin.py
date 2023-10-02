@@ -1,4 +1,5 @@
 from django.contrib import admin
+# From django.utils.safestring import mark_safe
 
 from .models import Category, Location, Post, Comment
 
@@ -67,11 +68,18 @@ class PostAdmin(admin.ModelAdmin):
     )
 
 
+'''def PostPictureDisplay(self):
+        if self.get_object().image:
+            return mark_safe(f'<img src={obj.image.url}
+            width="80" height="60">')'''
+# Uffffff
+
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'text',
-        'post_id',
+        'post',
         'created_at',
         'author',
     )
