@@ -90,10 +90,10 @@ class PostDetailView(FilterMixin, ListView):
                 'category'
             ),
             pk=self.kwargs['pk'])
-        if (self.request.user != post.author and
-            (post.pub_date > now() or
-             not post.is_published or
-             not post.category.is_published)):
+        if (self.request.user != post.author
+            and (post.pub_date > now()
+                 or not post.is_published
+                 or not post.category.is_published)):
             raise Http404
         return post
 
