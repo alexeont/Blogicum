@@ -21,7 +21,7 @@ urlpatterns = [
          name='delete_comment'),
     path('posts/<post_id>/comment/', views.CommentCreateView.as_view(),
          name='add_comment'),
-    path('posts/<int:pk>/', views.PostDetailView.as_view(),
+    path('posts/<int:pk>/', views.PostListView.as_view(),
          name='post_detail'),
     path('category/<slug:category_slug>/', views.CategoryListView.as_view(),
          name='category_posts'),

@@ -36,11 +36,9 @@ class ProfileListView(FilterMixin, ListView):
         )
 
     def get_queryset(self):
-        author = self.kwargs['username']
-        qs = self.select_annotate(Post.objects).filter(
-            author__username=author
-        )
-        return qs
+        return self.select_annotate(Post.objects.filter(
+            author__username=self.get_object().username
+        ))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,15 +67,14 @@ class IndexListView(FilterMixin, ListView):
     paginate_by = INDEX_POSTS_LIMITER
 
     def get_queryset(self):
-        qs = self.select_annotate(Post.objects).filter(
+        return self.select_annotate(Post.objects.filter(
             pub_date__lte=now(),
             is_published=True,
             category__is_published=True
-        )
-        return qs
+        ))
 
 
-class PostDetailView(FilterMixin, ListView):
+class PostListView(FilterMixin, ListView):
     model = Post
     template_name = 'blog/detail.html'
     paginate_by = INDEX_POSTS_LIMITER
@@ -124,11 +121,10 @@ class CategoryListView(FilterMixin, ListView):
         return category
 
     def get_queryset(self):
-        qs = self.select_annotate(self.get_object().posts).filter(
+        return self.select_annotate(self.get_object().posts.filter(
             pub_date__lte=now(),
             is_published=True,
-        )
-        return qs
+        ))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -161,6 +157,7 @@ class PostDeleteView(PostMixin, DeleteView):
 
 class CommentCreateView(CommentMixin, CreateView):
     def form_valid(self, form):
+        get_object_or_404(Post, pk=self.kwargs['post_id'])
         form.instance.author = self.request.user
         form.instance.post_id = self.kwargs['post_id']
         return super().form_valid(form)

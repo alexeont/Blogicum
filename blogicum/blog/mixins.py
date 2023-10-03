@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
 from .forms import CommentForm, PostForm
@@ -9,7 +9,7 @@ from .models import Post, Comment
 
 class AuthMixin(UserPassesTestMixin):
     def test_func(self):
-        return (self.request.user == self.get_object().author)
+        return self.request.user == self.get_object().author
 
 
 class PostMixin(AuthMixin, LoginRequiredMixin):
@@ -38,17 +38,14 @@ class CommentMixin(LoginRequiredMixin):
     template_name = 'blog/comment.html'
     pk_url_kwarg = 'comment_id'
 
-    def dispatch(self, request, *args, **kwargs):
-        get_object_or_404(Post, pk=kwargs['post_id'])
-        return super().dispatch(request, *args, **kwargs)
-
     def get_success_url(self):
         return reverse_lazy('blog:post_detail',
                             kwargs={'pk': self.kwargs['post_id']})
 
 
 class FilterMixin:
-    def select_annotate(self, objects):
+    @staticmethod
+    def select_annotate(objects):
         return (
             objects.select_related(
                 'author',
