@@ -1,5 +1,5 @@
 from django.contrib import admin
-# From django.utils.safestring import mark_safe
+from django.utils.safestring import mark_safe
 
 from .models import Category, Location, Post, Comment
 
@@ -47,6 +47,7 @@ class PostAdmin(admin.ModelAdmin):
         'is_published',
         'created_at',
         'image',
+        'picture_display',
     )
     list_editable = (
         'is_published',
@@ -67,12 +68,9 @@ class PostAdmin(admin.ModelAdmin):
         'created_at'
     )
 
-
-'''def PostPictureDisplay(self):
-        if self.get_object().image:
-            return mark_safe(f'<img src={obj.image.url}
-            width="80" height="60">')'''
-# Uffffff
+    def picture_display(self, obj):
+        if obj.image:
+            return mark_safe(f'(<img src={obj.image.url} width="80" height="60">')
 
 
 @admin.register(Comment)
